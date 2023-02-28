@@ -1,0 +1,90 @@
+--1--
+select continent,
+	   	count(distinct company_id) as total_company
+from unicorn_companies
+group by 1 
+order by 2 desc; 
+--2--
+select country,
+		count(distinct company_id) as total_company
+from unicorn_companies
+group by country 
+having count(distinct company_id) > 100
+order by total_company desc;
+--3--
+select ui.industry,
+		   avg(uf.valuation) as avg_valuation,
+		   sum(uf.funding) as total_funding
+from unicorn_industries ui
+join unicorn_funding uf 
+on ui.company_id = uf.company_id 
+group by ui.industry 
+order by total_funding desc 
+limit 1;
+--4--
+select count(distinct uc.company) as total_company,
+		   extract(year from ud.date_joined) as year_joined
+from unicorn_companies uc 
+inner join unicorn_dates ud on uc.company_id = ud.company_id 
+inner join unicorn_industries ui on ui.company_id = uc.company_id
+where ui.industry = 'Fintech'
+and extract(year from ud.date_joined) between 2016 and 2022
+group by year_joined 
+order by year_joined desc;
+--5A--
+select uc.company,
+		   uc.city,
+	  	 uc.country,
+		   uc.continent,
+		   ui.industry,
+		   uf.valuation
+from unicorn_companies uc
+inner join unicorn_funding uf on uc.company_id = uf.company_id
+inner join unicorn_industries ui on ui.company_id = uc.company_id 
+group by uc.company 
+order by uf.valuation desc;
+--5B--
+select uc.company,
+		uc.city,
+		uc.country,
+		uc.continent,
+		ui.industry,
+		uf.valuation
+from unicorn_companies uc 
+inner join unicorn_funding uf on uc.company_id = uf.company_id
+inner join unicorn_industries ui on ui.company_id = uc.company_id 
+where uc.country = 'Indonesia'
+order by uf.valuation desc;
+--6--
+select uc.company,
+		uc.country,
+		year(curdate()) - ud.year_founded as company_age
+from unicorn_companies uc 
+join unicorn_dates ud on uc.company_id = ud.company_id 
+order by company_age desc;
+--7--
+select uc.company,
+		uc.country,
+		extract(year from ud.date_joined) - ud.year_founded as age_joined
+from unicorn_companies uc 
+left join unicorn_dates ud on uc.company_id = ud.company_id
+where ud.year_founded between 1960 and 2000
+order by age_joined desc;
+--8A--
+select count(distinct uc.company) as total_company,
+		uf.select_investors
+from unicorn_companies uc join unicorn_funding uf on uc.company_id = uf.company_id 
+where uf.select_investors like  '%venture%';
+--8B--
+select  count(distinct case when lower (select_investors)like '%venture%' 
+		  then company_id end) as venture,
+		count(distinct case when lower (select_investors)like '%capital%' 
+		  then company_id end) as capital,
+	  	count(distinct case when lower (select_investors)like '%partner%' 
+		  then company_id end) as partner
+from unicorn_funding;
+--9--
+select count(distinct case when uc.continent = 'Asia' then uc.company  end) as total_company,
+		count(distinct case when uc.country = 'Indonesia' then uc.company  end) as id_company
+from unicorn_companies uc join unicorn_industries ui on uc.company_id = ui.company_id 
+where ui.industry like '%logistics%';
