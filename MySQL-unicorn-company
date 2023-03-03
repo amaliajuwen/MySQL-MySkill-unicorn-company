@@ -80,18 +80,15 @@ select count(distinct uc.company) as total_company,
 from unicorn_companies uc join unicorn_funding uf on uc.company_id = uf.company_id 
 where uf.select_investors like  '%venture%';
 --8B--
-select  count(distinct case when lower (select_investors)like '%venture%' 
+select   count(distinct case when lower (select_investors)like '%venture%' 
 		  then company_id end) as venture,
-		count(distinct case when lower (select_investors)like '%capital%' 
+	 count(distinct case when lower (select_investors)like '%capital%' 
 		  then company_id end) as capital,
-	  	count(distinct case when lower (select_investors)like '%partner%' 
+	 count(distinct case when lower (select_investors)like '%partner%' 
 		  then company_id end) as partner
 from unicorn_funding;
 --9--
-select  count(distinct case when lower (select_investors)like '%venture%' 
-		  then company_id end) as venture,
-	count(distinct case when lower (select_investors)like '%capital%' 
-		  then company_id end) as capital,
-	count(distinct case when lower (select_investors)like '%partner%' 
-		  then company_id end) as partner
-from unicorn_funding;
+select  count(distinct case when uc.continent = 'Asia' then uc.company  end) as total_company,
+	count(distinct case when uc.country = 'Indonesia' then uc.company  end) as id_company
+from unicorn_companies uc join unicorn_industries ui on uc.company_id = ui.company_id 
+where ui.industry like '%logistics%'
