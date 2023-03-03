@@ -1,4 +1,3 @@
-use company; 
 CREATE TABLE unicorn_companies (
     company_id INT,
     company TEXT,
@@ -1085,4 +1084,3 @@ values (106,'Airwallex','Melbourne','Australia','Oceania'),
     (866,'Assembly','Culver City','United States','North America'),
     (651,'Xiaobing','Beijing','China','Asia'),
     (890,'Carson Group','Lincoln','United States','North America');
-
